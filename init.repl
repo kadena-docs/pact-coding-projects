@@ -1,0 +1,22 @@
+;; Begin-tx starts our transaction execution for repl testing
+(begin-tx)
+;; Module is where we store smart contract logic, protected by a keyset or governance
+(module basic-guards GOV
+;; Defcap is a capability token, which represents the ability or right to execute code blocks
+    (defcap GOV () true)
+;;  Defconst defines a name as a value, similar to a constant/static variable in other languages
+;; (create-user-guard) is a built in custom guard who's arguments are strictly evaluating during execution
+    (defconst GUARD_SUCCESS (create-user-guard (success)))
+    (defconst GUARD_FAILURE (create-user-guard (failure)))
+;; Defun are function definitions in Pact
+    (defun success () true)
+    (defun failure () (enforce false "Disabled"))
+ )
+;; Commit-tx executes our transaction
+(commit-tx)
+(begin-tx)
+;; (use) imports an existing module into a namespace
+(use basic-guards)
+;; Define-namespace creates a namespace called free, controlled by the GUARD_SUCCESS from our module
+(define-namespace 'free GUARD_SUCCESS GUARD_SUCCESS)
+(commit-tx)
