@@ -13,20 +13,19 @@
 ;;  1-Define-module-and-keyset
 ;; ===================================================================
 
-;; Define and read a keyset named admin-keyset.
+;; Define and read a keyset named "admin-keyset" for the module.
 
-;; Create a module named payments that is governed by the 
+;; Create a module named "payments" that is governed by the 
 ;; "admin-keyset" guard.
 
 ;; ===================================================================
 ;;  2-Define-schemas-and-table
 ;; ===================================================================
 
-  ;; Define the schema for "payments" including balance as type decimal 
-  ;; and keyset as type keyset.
+  ;; Define the schema for "payments" with columns "balance" as type 
+  ;; decimal and keyset as type guard.
 
-  ;; Define the "payments-table" using the schema {payments} you  
-  ;; created.
+  ;; Define the "payments-table" using the {payments} schema.
 
 ;; ===================================================================
 ;;  3-Define-functions
@@ -46,15 +45,15 @@
 
   ;; Define the "get-balance" function that takes an argument of id.
 
-    ;; Use "with-read" to view the id from the payments-table.
+    ;; Use "with-read" to view the id from the "payments-table" and
+      ;; bind the value of the balance and keyset for the given id 
+      ;; to "balance" and "keyset" variables.
 
-      ;; - Bind the value of the balance and keyset for the given id 
-      ;;   to variables named balance and keyset.
-
-      ;; - Use "enforce-one" to check that the keyset calling the 
-      ;;   function is the admin-keyset or the provided id keyset.
+      ;; Use "enforce-one" to check that the keyset calling the 
+      ;; function is the admin-keyset or the provided id keyset.
 
     ;; Return the balance.
+
 
   ;; Define the "pay" function that takes parameters from, to, 
   ;; and amount.
