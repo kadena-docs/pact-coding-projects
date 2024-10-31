@@ -1,0 +1,67 @@
+(env-keys ["admin", "moduleadmin", "operateadmin"])
+(env-data
+  { 
+    "module-admin-keyset": ["moduleadmin"],
+    "module-operate-keyset": ["operateadmin"]})
+
+;;init module is loaded
+(load "../init.repl")
+
+;;auth module is loaded
+(begin-tx)
+(load "auth.pact")
+(commit-tx)
+;;payments module is loaded
+
+(begin-tx)
+(namespace 'free)
+(use auth)
+(env-data {"admin-keyset" : ["admin"],
+           "sarah-keyset": ["sarah"],
+           "james-keyset": ["james"]})
+;; First we create wallet accounts
+(create-user "admin" "Administrator" (read-keyset 'admin-keyset))
+(create-user "Sarah" "Sarah" (read-keyset 'sarah-keyset))
+(create-user "James" "Jamess" (read-keyset 'james-keyset))
+
+(commit-tx)
+
+(begin-tx "Test Enforce User Authentication")
+(use free.auth)
+
+(expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (enforce-user-auth "Sarah"))
+
+;; Now we specify the keyset and expect this to succeed
+(env-keys ["sarah"])
+(enforce-user-auth "Sarah")
+
+(commit-tx)
+
+(begin-tx "Test Change Nickname")
+(use free.auth)
+(env-keys [""])
+(expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (change-nickname "Sarah" "Sarah"))
+
+;; Now we specify the keyset and expect this to succeed
+(env-keys ["sarah", "james"])
+(change-nickname "Sarah" "Sarah")
+(change-nickname "James" "James")
+(env-keys [""])
+
+(commit-tx)
+
+(begin-tx "Test Rotate Keyset")
+(use free.auth)
+(env-data {
+           "sarah-keyset": ["sarah"],
+           "james-keyset": ["james"]})
+
+(expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (rotate-keyset "Sarah" (read-keyset 'sarah-keyset)))
+(expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (rotate-keyset "James" (read-keyset 'james-keyset)))
+
+;; Now we specify the keyset and expect this to succeed
+(env-keys ["sarah", "james"])
+(rotate-keyset "Sarah" (read-keyset 'james-keyset))
+(rotate-keyset "James" (read-keyset 'sarah-keyset))
+
+(commit-tx)
