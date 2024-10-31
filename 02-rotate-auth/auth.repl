@@ -11,7 +11,6 @@
 (begin-tx)
 (load "auth.pact")
 (commit-tx)
-;;payments module is loaded
 
 (begin-tx)
 (namespace 'free)
