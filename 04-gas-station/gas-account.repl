@@ -1,0 +1,43 @@
+(env-data
+    { "dev-account":
+        { 'keys : [ "58705e8699678bd15bbda2cf40fa236694895db614aafc82cf1c06c014ca963c" ]
+        , 'pred : 'keys-all
+        }
+    }
+)
+  (env-sigs
+    [{ 'key  : "58705e8699678bd15bbda2cf40fa236694895db614aafc82cf1c06c014ca963c"
+     , 'caps : []
+    }]
+  )
+
+(begin-tx "Define principal namespace")
+  (define-namespace "free" (read-keyset "dev-account" ) (read-keyset "dev-account" ))
+(commit-tx)
+ 
+(begin-tx "Define admin-keyset")
+  (namespace "free")
+  (define-keyset "free.dev-account" (read-keyset "dev-account" ))
+(commit-tx)
+
+(begin-tx "Load required modules")
+   (load "fungible-v2.pact")
+   (load "fungible-xchain-v1.pact")
+   (load "coin-v5.pact")
+   (create-table coin-table)
+   (create-table allocation-table)
+   (load "gas-payer-v1.pact")
+(commit-tx)
+
+(env-data
+    { 'init: true }
+)
+
+(begin-tx "Load gas station module")
+   (load "01-gas-account.pact")
+   [GAS_ACCOUNT]
+(commit-tx)
+
+(begin-tx "Verify account")
+   (coin.details free.test-gas.GAS_ACCOUNT)
+(commit-tx)
