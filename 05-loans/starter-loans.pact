@@ -13,6 +13,8 @@
 ;;  1-Define-module-and-keyset
 ;; ===================================================================
 
+;; Specify the namespace for the module.
+
 ;; Define and read a keyset named "loan-admin" for the module.
 
 ;; Create a module named "loans" that is governed by the 
@@ -29,6 +31,8 @@
     ;; column loanAmount of type integer
     ;; column status of type string
 
+    ;; Define the "loans-table" that uses the "loans" schema
+
 ;; Define the "loan-history" schema with the following columns and types:
 
     ;; column loanId of type string
@@ -36,19 +40,16 @@
     ;; column seller of type string
     ;; column amount of type integer
 
+    ;; Define the "loan-history-table" that uses the "loan-history" schema.
+
 ;; Define the "loan-inventory" schema with the following column and type:
 
     ;; column balance of type integer
     
-;; Define the "loans-table" that uses the "loans" schema
-
-;; Define the "loan-history-table" that uses the "loan-history" schema.
-
-;; Define the "loan-inventory-table" that uses the "loan-inventory" schema.
-
+    ;; Define the "loan-inventory-table" that uses the "loan-inventory" schema.
 
 ;; ===================================================================
-;;  3-Define-constantss
+;;  3-Define-constants
 ;; ===================================================================
 
   ;; Define the INITIATED constant with the comment "initiated".
