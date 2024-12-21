@@ -1,0 +1,37 @@
+(env-keys ["loan-admin-keyset"])
+(env-data { "loans-admin":
+  { "keys": ["loan-admin-keyset"], "pred": "keys-all" } })
+
+  (begin-tx "Define namespace")
+  (define-namespace "free" (read-keyset "loans-admin" ) (read-keyset "loans-admin" ))
+(commit-tx)
+
+(begin-tx "Call functions that update loan tables")
+  (load "loans.pact")
+  (inventory-key "loanId-1" "Las Pistolas") ;; loanId, owner
+  (create-a-loan "loanId-1" "Ponderosa" "Valley Credit" 16000) ;; loanId, loanName, entity, amount
+  (assign-a-loan "txid-1" "loanId-1" "Studio Funding" 10000) ;; loanId, buyer, amount
+  (sell-a-loan "txid-2" "loanId-1" "buyer2" "Studio Funding" 2000) ;; loanId, seller, buyer, amount
+(commit-tx)
+
+(begin-tx "Call functions that read loan information")
+   (use free.loans)
+   (create-a-loan "loanId-2" "Renovation" "RiverBank" 140000)
+   (read-a-loan "loanId-1")
+   (read-all-loans)
+   (read-loan-inventory)
+   (read-loans-with-status INITIATED)
+   (read-loans-with-status ASSIGNED)
+(commit-tx)
+
+(begin-tx "Test inventory-key function")
+  (free.loans.inventory-key "loanId-3" "Pistolas")
+(commit-tx)
+
+(begin-tx "Test create-a-loan function")
+  (free.loans.create-a-loan "loanId-3" "Pistolas" "Capital Bank" 11000)
+(commit-tx)
+
+(begin-tx "Test assign-a-loan function")
+  (free.loans.assign-a-loan "txid-3" "loanId-3" "Buyer 1" 10000) ;; loanId, buyer, amount
+(commit-tx)

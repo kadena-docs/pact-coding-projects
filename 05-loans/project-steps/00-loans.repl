@@ -1,0 +1,11 @@
+(env-keys ["loan-admin-keyset"])
+(env-data { "loans-admin":
+  { "keys": ["loan-admin-keyset"], "pred": "keys-all" } })
+
+  (begin-tx "Define namespace")
+  (define-namespace "free" (read-keyset "loans-admin" ) (read-keyset "loans-admin" ))
+(commit-tx)
+
+(begin-tx)
+  (load "00-loans.pact")
+(commit-tx)
