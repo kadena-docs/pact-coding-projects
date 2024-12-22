@@ -31,7 +31,7 @@
     ;; column loanAmount of type integer
     ;; column status of type string
 
-    ;; Define the "loans-table" that uses the "loans" schema
+    ;; Define the "loans" table that uses the "loans" schema
 
 ;; Define the "loan-history" schema with the following columns and types:
 
@@ -74,7 +74,7 @@
   ;; Define the "create-a-loan" function that takes the parameters: 
   ;; loanId, loanName, entityName, and loanAmount
 
-    ;; Insert data into "loans-table" using the loanId
+    ;; Insert data into "loans" table using the loanId
 
       ;; Insert "loanName" as value of loanName
 
@@ -96,7 +96,7 @@
   ;; Define the "assign-a-loan" function that takes parameters: txid, 
   ;; loanId, buyer, and amount.
 
-    ;; Read from "loans-table" using loanId
+    ;; Read from "loans" table using loanId
 
       ;; Bind "entityName" to the value of entityName
 
@@ -122,7 +122,7 @@
 
         ;; Update new balance of the issuer in the inventory table
 
-      ;; Update "loans-table" using loanId
+      ;; Update "loans" table using loanId
 
         ;; update "status" to value ASSIGNED
 
@@ -171,7 +171,7 @@
 
   ;; Define the "read-a-loan" function that takes the parameter loanId.
 
-  ;; Read all values of the "loans-table" at the given loanId.
+  ;; Read all values of the "loans" table at the given loanId.
 
 ;; ===================================================================
 ;;  4-Define-functions: "read-loan-tx"
@@ -219,7 +219,7 @@
   ;; Define the "read-loans-with-status" function that takes the
   ;; parameter status.
 
-    ;; Select all values from the 'loans-table  where "status" equals 
+    ;; Select all values from the "loans" table where "status" equals 
     ;; the parameter status.
 
 
@@ -229,7 +229,7 @@
 ;;  4-Create-tables
 ;; ===================================================================
 
-;; Create "loans-table".
+;; Create loans-table.
 
 ;; Create "loans-history-table".
 
