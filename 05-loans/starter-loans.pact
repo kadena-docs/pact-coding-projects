@@ -174,15 +174,6 @@
   ;; Read all values of the "loans" table at the given loanId.
 
 ;; ===================================================================
-;;  4-Define-functions: "read-loan-tx"
-;; ===================================================================
-
-  ;; Define the "read-loan-tx" function that takes no parameters.
-
-    ;; Map the values of the transaction log in the "loans" table to 
-    ;; the txids in the "loans" table at value 0.
-
-;; ===================================================================
 ;;  4-Define-functions: "read-all-loans"
 ;; ===================================================================
 
