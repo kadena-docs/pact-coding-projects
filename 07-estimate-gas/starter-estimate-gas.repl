@@ -1,0 +1,92 @@
+;;
+;; "Estimate gas" coding project for the "Loans" module
+;; 
+;; ===================================================================
+;;
+;;  This file provides the framework for the different tasks you'll
+;;  try to tackle in the "Estimate gas" coding project.
+;;
+;;  This starter file provides a preview of the steps you'll follow to
+;;  build the loans-estimate.repl file for the loans-estimate.pact 
+;;  application.
+;;
+;; ===================================================================
+;;  1 Set environment data
+;; ===================================================================
+
+;; Set the transaction signature to use the loans-admin-keyset.
+
+;; Set environment data to define the key and predicate function for 
+;; loans-admin-keyset.
+
+;; Define the "free" namespace for the module.
+
+;; Set the env-gasmodel and env-gaslimit to initialize gas modeling.
+
+;; ===================================================================
+;;  2 Load the loans-estimate.pact file and call a function
+;; ===================================================================
+
+;; Begin a transaction.
+
+;; Load the loans-estimate.pact file into the REPL.
+
+;; Call the inventory-key function.
+
+;; Retrieve the gas consumed.
+
+;; Commit the transaction.
+
+;; Reset the consumed gas to zero.
+
+;; ===================================================================
+;;  3 Call each function to retrieve the gas consumed
+;; ===================================================================
+
+;; Begin a transaction.
+
+;; Use the loans module.
+
+;; Call the create-a-loan function with appropriate parameters.
+   ;; Retrieve the gas consumed.
+   ;; Commit the transaction.
+   ;; Reset the consumed gas to zero.
+
+;; Call the assign-a-loan function with appropriate parameters.
+   ;; Retrieve the gas consumed.
+   ;; Commit the transaction.
+   ;; Reset the consumed gas to zero.
+
+;; Call the sell-a-loan function with appropriate parameters.
+   ;; Retrieve the gas consumed.
+   ;; Commit the transaction.
+   ;; Reset the consumed gas to zero.
+
+;; Call the sell-a-loan function with appropriate parameters.
+   ;; Retrieve the gas consumed.
+   ;; Commit the transaction.
+   ;; Reset the consumed gas to zero.
+
+;; Call the read-a-loan function with appropriate parameters.
+   ;; Retrieve the gas consumed.
+   ;; Commit the transaction.
+   ;; Reset the consumed gas to zero.
+   
+;; Call the read-all-loans function with appropriate parameters.
+   ;; Retrieve the gas consumed.
+   ;; Commit the transaction.
+   ;; Reset the consumed gas to zero.
+
+;; ===================================================================
+;;  4 Combine multiple functions in a transaction and retrieve gas
+;; ===================================================================
+
+;; Begin a transaction that calls multiple functions.
+   ;; Use the loans module.
+   ;; Call create-a-loan with appropriate parameters.
+   ;; Call read-a-loan with appropriate parameters.
+   ;; Call read-loan-inventory.
+   ;; Call read-loans-with-status of INITIATED
+   ;; Retrieve the gas consumed.
+;; Commit the transaction.
+
