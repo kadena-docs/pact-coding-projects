@@ -1,4 +1,4 @@
-;
+;;
 ;; "Loans" module
 ;; 
 ;; ===================================================================
@@ -10,7 +10,7 @@
 ;;  build the loans.pact final application.
 ;;
 ;; ===================================================================
-;;  1-Define-module-and-keyset
+;;  1 Define module and keyset
 ;; ===================================================================
 
 ;; Specify the namespace for the module.
@@ -21,7 +21,7 @@
 ;; "loan-admin" guard.
 
 ;; ===================================================================
-;;  2-Define-schemas-and-tables
+;;  2 Define schemas and tables
 ;; ===================================================================
 
 ;; Define the "loan" schema with the following columns and types:
@@ -49,7 +49,7 @@
     ;; Define the "loan-inventory-table" that uses the "loan-inventory" schema.
 
 ;; ===================================================================
-;;  3-Define-constants
+;;  3 Define constants
 ;; ===================================================================
 
   ;; Define the INITIATED constant with the comment "initiated".
@@ -58,7 +58,7 @@
 
 
 ;; ===================================================================
-;;  4-Define-functions: "inventory-key"
+;;  4 Define functions: "inventory-key"
 ;; ===================================================================
   
   ;; Define the "inventory-key" function named that takes inputs: 
@@ -68,7 +68,7 @@
      ;; "loanId:owner".
 
 ;; ===================================================================
-;;  4-Define-functions: "create-a-loan"
+;;  4 Define functions: "create-a-loan"
 ;; ===================================================================
   
   ;; Define the "create-a-loan" function that takes the parameters: 
@@ -90,7 +90,7 @@
       ;; Insert "balance" as value loanAmount
 
 ;; ===================================================================
-;;  4-Define-functions: "assign-a-loan"
+;;  4 Define functions: "assign-a-loan"
 ;; ===================================================================
 
   ;; Define the "assign-a-loan" function that takes parameters: txid, 
@@ -127,7 +127,7 @@
         ;; update "status" to value ASSIGNED
 
 ;; ===================================================================
-;;  4-Define-functions: "sell-a-loan"
+;;  4 Define functions: "sell-a-loan"
 ;; ===================================================================
 
   ;; Define the "sell-a-loan" function that takes parameters: 
@@ -166,7 +166,7 @@
         ;; Set "balance" the previous-seller-balance plus the amount
 
 ;; ===================================================================
-;;  4-Define-functions: "read-a-loan"
+;;  4 Define functions: "read-a-loan"
 ;; ===================================================================
 
   ;; Define the "read-a-loan" function that takes the parameter loanId.
@@ -174,7 +174,7 @@
   ;; Read all values of the "loans" table at the given loanId.
 
 ;; ===================================================================
-;;  4-Define-functions: "read-all-loans"
+;;  4 Define functions: "read-all-loans"
 ;; ===================================================================
 
   ;; Define the "read-all-loans" function that takes no parameters.
@@ -183,7 +183,7 @@
     ;; to true.
 
 ;; ===================================================================
-;;  4-Define-functions: "read-inventory-pair"
+;;  4 Define functions: "read-inventory-pair"
 ;; ===================================================================
 
   ;; Define the "read-inventory-pair" function takes a parameter 
@@ -195,7 +195,7 @@
      ;; at the value of the key
 
 ;; ===================================================================
-;;  4-Define-functions: "read-loan-inventory"
+;;  4 Define functions: "read-loan-inventory"
 ;; ===================================================================
 
   ;; Define the "read-loan-inventory" function that takes no parameters.
@@ -204,7 +204,7 @@
     ;; "loan-inventory-table".
 
 ;; ===================================================================
-;;  4-Define-functions: "read-loans-with-status"
+;;  4 Define functions: "read-loans-with-status"
 ;; ===================================================================
 
   ;; Define the "read-loans-with-status" function that takes the
@@ -217,7 +217,7 @@
 ;; Close the module declaration
 
 ;; ===================================================================
-;;  4-Create-tables
+;;  4 Create tables
 ;; ===================================================================
 
 ;; Create loans-table.
