@@ -1,25 +1,22 @@
-(load "../init.repl")
-
-;; Load in the smart contract
+;; Add environment data and load the contract
 (begin-tx)
-;; Set our namespace to free for this test
-(namespace 'free)
 ;; Define and read a keyset named admin-keyset.
-(env-data { "admin-keyset": {"keys": ["admin-key"]} })
+  (env-data { "admin-keyset": {"keys": ["admin-key"]} })
 ;; Use our admin keyset for loading the simple-payment module.
-(env-keys ["admin-key"])
+  (env-keys ["admin-key"])
 ;; Loads the smart contract into the repl
-(load "simple-payment.pact")
+  (load "simple-payment.pact")
 (commit-tx)
 
 (begin-tx)
 
 ;; ===================================================================
-;;  5-Create-accounts
+;;  Test Create accounts
 ;; ===================================================================
 
-;; Call our payment module into scope for this transaction.
-(use free.payments)
+;; Call the payments module into scope for this transaction.
+(use dev.payments)
+;; Clear the admin-keyset to test creating an account.
 (env-keys [""])
 ;; Define the keysets for Sarah and James.
 (env-data { 
@@ -27,7 +24,7 @@
     "james-keyset": {"keys": ["james-key"]}})
 
 ;; Try creating the Sarah account with initial value of 100.25 without proper admin keyset defined.
-(expect-failure "Admin Keyset is missing" "Keyset failure (keys-all): 'free.admin-keyset" (create-account "Sarah" 100.25 (read-keyset "sarah-keyset")))
+(expect-failure "Admin Keyset is missing" "Keyset failure (keys-all): [admin-ke...]" (create-account "Sarah" 100.25 (read-keyset "sarah-keyset")))
 
 (env-keys ["admin-key"])
 
@@ -38,14 +35,14 @@
 (create-account "James" 250.0 (read-keyset "james-keyset"))
 
 ;; ===================================================================
-;;  6-Make-payment
+;;  Test make a payment
 ;; ===================================================================
 (env-keys ["sarah-key"])
 ;; Call the pay function to pay 25.0 from Sarah to James.
 (pay "Sarah" "James" 25.0)
 
 ;; ===================================================================
-;;  7-Get-balances
+;;  Test get balances
 ;; ===================================================================
 (env-keys ["sarah-key"])
 ;; Read Sarah's balance as Sarah.
