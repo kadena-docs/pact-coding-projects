@@ -1,0 +1,58 @@
+(load "../init.repl")
+
+;; Load in the smart contract
+(begin-tx)
+;; Set our namespace to free for this test
+(namespace 'free)
+;; Define and read a keyset named admin-keyset.
+(env-data { "admin-keyset": {"keys": ["admin-key"]} })
+;; Use our admin keyset for loading the simple-payment module.
+(env-keys ["admin-key"])
+;; Loads the smart contract into the repl
+(load "simple-payment.pact")
+(commit-tx)
+
+(begin-tx)
+
+;; ===================================================================
+;;  5-Create-accounts
+;; ===================================================================
+
+;; Call our payment module into scope for this transaction.
+(use free.payments)
+(env-keys [""])
+;; Define the keysets for Sarah and James.
+(env-data { 
+    "sarah-keyset": {"keys": ["sarah-key"]},
+    "james-keyset": {"keys": ["james-key"]}})
+
+;; Try creating the Sarah account with initial value of 100.25 without proper admin keyset defined.
+(expect-failure "Admin Keyset is missing" "Keyset failure (keys-all): 'free.admin-keyset" (create-account "Sarah" 100.25 (read-keyset "sarah-keyset")))
+
+(env-keys ["admin-key"])
+
+;; Create the Sarah account with initial value of 100.25 with proper admin keyset defined.
+(expect "Admin Keyset is present" "Write succeeded" (create-account "Sarah" 100.25 (read-keyset "sarah-keyset")))
+
+;; Create the James account with initial value of 250.0.
+(create-account "James" 250.0 (read-keyset "james-keyset"))
+
+;; ===================================================================
+;;  6-Make-payment
+;; ===================================================================
+(env-keys ["sarah-key"])
+;; Call the pay function to pay 25.0 from Sarah to James.
+(pay "Sarah" "James" 25.0)
+
+;; ===================================================================
+;;  7-Get-balances
+;; ===================================================================
+(env-keys ["sarah-key"])
+;; Read Sarah's balance as Sarah.
+(format "Sarah's balance is {}" [(get-balance "Sarah")])
+
+(env-keys ["james-key"])
+;; Read James' balance as James.
+(format "James's balance is {}" [(get-balance "James")])
+
+(commit-tx)

@@ -1,0 +1,108 @@
+;; Set keyset information
+(env-data
+    { 'admin-keyset :
+      { 'keys : [ 'admin-public-key ]
+      , 'pred : 'keys-all
+      }
+    }
+)
+;; Add a signature for signing transactions
+(env-sigs
+  [{ 'key  : 'admin-public-key
+   , 'caps : []
+  }]
+)
+
+(begin-tx "Define a namespace and keyset")
+
+  (define-namespace "dev" (read-keyset "admin-keyset") (read-keyset "admin-keyset"))
+  (namespace "dev")
+  (expect
+     "A keyset can be defined"
+     "Keyset write success"
+    (define-keyset "dev.admin-keyset" (read-keyset "admin-keyset")))
+(commit-tx)
+
+(begin-tx "Crete module")
+  (module payments "dev.admin-keyset"
+
+    (defschema payments
+      balance:decimal
+      keyset:guard)
+
+    (deftable payments-table:{payments})
+
+    (defun create-account:string (id:string initial-balance:decimal keyset:guard)
+      (enforce-guard "dev.admin-keyset")
+      (enforce (>= initial-balance 0.0) "Initial balances must be >= 0.")
+      (insert payments-table id
+        { "balance": initial-balance,
+          "keyset": keyset })
+    )
+
+    (defun get-balance:decimal (id:string)
+      (with-read payments-table id
+        { "balance":= balance, "keyset":= keyset }
+        (enforce-one "Access denied"
+        [(enforce-guard keyset)
+         (enforce-guard "dev.admin-keyset")])
+      balance)
+    )
+
+    (defun pay:string (from:string to:string amount:decimal)
+      (with-read payments-table from { "balance":= from-bal, "keyset":= keyset }  
+        (enforce-guard keyset)
+        (with-read payments-table to { "balance":= to-bal }
+          (enforce (> amount 0.0) "Negative transaction amount")
+          (enforce (>= from-bal amount) "Insufficient funds")
+          (update payments-table from
+             { "balance": (- from-bal amount) })
+             (update payments-table to
+             { "balance": (+ to-bal amount) })
+          (format "{} paid {} {}" [from to amount])
+        )
+      )
+    )
+  )
+(create-table payments-table)
+(commit-tx)
+
+(begin-tx "Test creating account")
+;; Call the payments module into scope for this transaction.
+  (use payments)
+  ;; Clear keys from the environment.
+  (env-keys [""])
+  ;; Define the keysets for Sarah and James.
+  (env-data { 
+    "sarah-keyset": {"keys": ["sarah-key"]},
+    "james-keyset": {"keys": ["james-key"]}})
+
+;; Try creating the Sarah account with initial value of 100.25 without proper admin keyset defined.
+(expect-failure "Admin Keyset is missing" "Keyset failure (keys-all): [admin-pu...]" (create-account "Sarah" 100.25 (read-keyset "sarah-keyset")))
+
+(env-keys ["admin-public-key"])
+
+;; Create the Sarah account with initial value of 100.25 with proper admin keyset defined.
+(expect "Admin Keyset is present" "Write succeeded" (create-account "Sarah" 100.25 (read-keyset "sarah-keyset")))
+
+;; Create the James account with initial value of 250.0.
+(create-account "James" 250.0 (read-keyset "james-keyset"))
+
+(commit-tx)
+
+(begin-tx "Test making a payment")
+  (use payments)
+  (env-keys ["sarah-key"])
+  (pay "Sarah" "James" 25.0)
+(commit-tx)
+
+(begin-tx "Test reading balances")
+  (use payments)
+  (env-keys ["sarah-key"])
+  ;; Read Sarah's balance as Sarah.
+  (format "Sarah's balance is {}" [(get-balance "Sarah")])
+
+  (env-keys ["james-key"])
+  ;; Read James' balance as James.
+  (format "James's balance is {}" [(get-balance "James")])
+(commit-tx)
