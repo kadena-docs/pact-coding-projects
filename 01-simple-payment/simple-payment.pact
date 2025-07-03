@@ -1,37 +1,39 @@
 ;; ===================================================================
-;;  1-Define-module-and-keyset
+;;  1 Define a namespace, keyset, and module
 ;; ===================================================================
-
-(namespace 'free)
-;; Define and read a keyset named admin-keyset.
-(define-keyset "free.admin-keyset" (read-keyset "admin-keyset"))
-;; Create a module named payments that is governed by admin-keyset.
-(module payments "free.admin-keyset"
+;; Define a local namespace controlled by admin-keyset.
+(define-namespace "dev" (read-keyset "admin-keyset") (read-keyset "admin-keyset"))
+;; Enter the namespace.
+(namespace "dev")
+;; Define the namespace keyset by reading admin-keyset.
+(define-keyset "dev.admin-keyset" (read-keyset "admin-keyset"))
+;; Create a module named payments that is governed by dev.admin-keyset.
+(module payments "dev.admin-keyset"
 
 ;; ===================================================================
-;;  2-Define-schemas-and-table
+;;  2 Define schema and table
 ;; ===================================================================
 
   ;; Define the schema for payments including balance as type decimal 
-  ;; and keyset as type keyset.
+  ;; and keyset as type guard.
   (defschema payments
     balance:decimal
-    keyset:keyset)
+    keyset:guard)
   ;; Define the payments-table using the schema {payments} you  
   ;; created.
   (deftable payments-table:{payments})
 
 ;; ===================================================================
-;;  3-Define-functions
+;;  3 Define functions
 ;; ===================================================================
 
   ;; Define the create-account function with the parameters
   ;; id, initial-balance, and keyset.
   (defun create-account:string (id:string initial-balance:decimal keyset:guard)
 
-    ;; Use enforce-keyset to ensure that the account is created by 
+    ;; Use enforce-guard to ensure that the account is created by 
     ;; the administrator.
-    (enforce-keyset "free.admin-keyset")
+    (enforce-guard "dev.admin-keyset")
 
     ;; Use enforce to ensure an initial-balance => 0.
     (enforce (>= initial-balance 0.0) "Initial balances must be >= 0.")
@@ -55,8 +57,8 @@
       ;;   function is the admin-keyset or the provided id keyset.
 
       (enforce-one "Access denied"
-      [(enforce-keyset keyset)
-       (enforce-keyset "free.admin-keyset")])
+      [(enforce-guard keyset)
+       (enforce-guard "dev.admin-keyset")])
     ;; Return the balance.
     balance)
   )
@@ -69,7 +71,7 @@
     ;; and "keyset" variables.
     (with-read payments-table from { "balance":= from-bal, "keyset":= keyset }
       ;; Enforce that the keyset is the keyset of the account.
-      (enforce-keyset keyset)
+      (enforce-guard keyset)
       ;; Use with-read to get the balance of the "to" account
       ;; and bind the balance to the "to-bal" variable named.
       (with-read payments-table to { "balance":= to-bal }
@@ -95,9 +97,8 @@
   )
 )
 ;; ===================================================================
-;;  4-Create-table
+;;  4 Create table
 ;; ===================================================================
 
 ;; Create the payments-table. This happens outside of the module. 
 (create-table payments-table)
-

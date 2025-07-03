@@ -10,16 +10,18 @@
 ;;  build the simple-payment.pact final application.
 ;;
 ;; ===================================================================
-;;  1-Define-module-and-keyset
+;;  1 Define a namespace, keyset, and module
 ;; ===================================================================
 
-;; Define and read a keyset named "admin-keyset" for the module.
+;; Define and enter a principal namespace or local developer namespace.
+
+;; Define and read a keyset named "admin-keyset" for the namespace.
 
 ;; Create a module named "payments" that is governed by the 
 ;; "admin-keyset" guard.
 
 ;; ===================================================================
-;;  2-Define-schemas-and-table
+;;  2 Define schema and table
 ;; ===================================================================
 
   ;; Define the schema for "payments" with columns "balance" as type 
@@ -28,13 +30,13 @@
   ;; Define the "payments-table" using the {payments} schema.
 
 ;; ===================================================================
-;;  3-Define-functions
+;;  3 Define functions
 ;; ===================================================================
 
   ;; Define the "create-account" function with the parameters
   ;; id, initial-balance, and keyset.
 
-    ;; Use "enforce-keyset" to ensure that the account is created by 
+    ;; Use "enforce-guard" to ensure that the account is created by 
     ;; the administrator.
 
     ;; Use "enforce" to ensure an initial-balance => 0.
@@ -83,13 +85,13 @@
         ;; has paid the "to" account the amount paid.
 
 ;; ===================================================================
-;;  4-Create-table
+;;  4 Create table
 ;; ===================================================================
 
 ;; Create the payments-table.
 
 ;; ===================================================================
-;;  5-Create-accounts
+;;  5 Create accounts
 ;; ===================================================================
 
 ;; Create the Sarah account with initial value of 100.25.
@@ -97,15 +99,16 @@
 ;; Create the James account with initial value of 250.0.
 
 ;; ===================================================================
-;;  6-Make-payment
+;;  6 Make payment
 ;; ===================================================================
 
 ;; Call the "pay" function to pay 25.0 from Sarah to James.
 
 ;; ===================================================================
-;;  7-Get-balances
+;;  7 Get balances
 ;; ===================================================================
 
 ;; Read Sarah's balance as Sarah.
 
 ;; Read James' balance as James.
+
