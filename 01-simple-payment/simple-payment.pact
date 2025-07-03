@@ -102,4 +102,3 @@
 
 ;; Create the payments-table. This happens outside of the module. 
 (create-table payments-table)
-

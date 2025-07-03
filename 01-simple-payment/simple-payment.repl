@@ -53,3 +53,4 @@
 (format "James's balance is {}" [(get-balance "James")])
 
 (commit-tx)
+
