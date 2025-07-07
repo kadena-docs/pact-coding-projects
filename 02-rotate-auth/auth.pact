@@ -51,7 +51,7 @@
   )
 
   ;; Define the "enforce-user-auth" function that takes the id parameter.
-  (defun enforce-user-auth (id:string)
+  (defun enforce-user-auth:guard (id:string)
     ;; Read the users-table to find the id, then bind value k to the 
     ;; keyset for the id.
     (with-read users-table id { "keyset":= k }
@@ -74,7 +74,7 @@
 
   ;; Define a "rotate-keyset" function that takes the parameters 
   ;; id and new-keyset.
-  (defun rotate-keyset (id:string new-keyset:guard)
+  (defun rotate-keyset:string (id:string new-keyset:guard)
     ;; Enforce user authorization for the id provided.
     (enforce-user-auth id)
     ;; Update the keyset to the new-keyset for the given id.
@@ -82,17 +82,16 @@
     ;; Return the message "Updated keyset for user [id]"
     (format "Updated keyset for user {}" [id])
   )
-
 ;; End module declaration for the "auth" module.
-)
+) 
 ;; ===================================================================
-;;  5 Create the table
+;;  4 Create the table
 ;; ===================================================================
 ;; Create the users-table. 
 (create-table users-table)       
 
 ;; ===================================================================
-;;  6-Test the functions
+;;  5 Test the functions
 ;; ===================================================================
 
 ;; Create a test user (sarah) with a nickname and keyset.
