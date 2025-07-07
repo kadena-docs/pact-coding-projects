@@ -1,53 +1,53 @@
 ;; ===================================================================
-;;  1-Define-two-keysets
+;;  1 Define the namespace, two keysets, and module
 ;; ===================================================================
-;; Keysets must be defined in a namespace.
-(namespace "free")
+;; 
+;; Define and enter a custom "dev" namespace.
+(define-namespace "dev" (read-keyset "module-admin-keyset") (read-keyset "module-admin-keyset"))
+(namespace "dev")
 
 ;; Define and read a keyset named module-admin.
-(define-keyset "free.module-admin" 
+(define-keyset "dev.module-admin" 
    (read-keyset "module-admin-keyset"))
-;; Define and read a keyset named operate-admin.
-(define-keyset "free.operate-admin"
-   (read-keyset "module-operate-keyset"))
 
-;; ===================================================================
-;;  2-Start-module-declaration
-;; ===================================================================
+;; Define and read a keyset named operate-admin.
+(define-keyset "dev.operate-admin"
+   (read-keyset "module-operate-keyset"))
 
 ;; Create a module named "auth" that is governed by the 
 ;; "module-admin" keyset guard.
-(module auth "free.module-admin"
+(module auth AUTH
+  (defcap AUTH ()
+    (enforce-guard "dev.module-admin"))
 
 ;; ===================================================================
-;;  3-Define-schemas-and-table
+;;  2 Define the schema and table
 ;; ===================================================================
 
-  ;; Define the schema for "user" with columns for "nickname" as type 
+  ;; Define the "user" schema with columns for "nickname" as type 
   ;; string and "keyset" as type guard.
   (defschema user
-    nickname:string
-    keyset:guard)
-
+     nickname:string
+     keyset:guard)
   ;; Define the "users-table" using the schema {user} you  
-  ;; created.
+  ;; created.)
   (deftable users-table:{user})
 
 ;; ===================================================================
-;;  4-Define-functions
+;;  3 Define functions
 ;; ===================================================================
 
   ;; Define a "create-user" function that takes arguments id, nickname, 
   ;; and keyset.
-  (defun create-user (id:string nickname:string keyset:guard)
-  ;; Enforce access to restrict function calls to the operate-admin.
-  (enforce-keyset "free.operate-admin")
-  ;; Insert a row into the "users-table" with the given id, nickname,
-  ;; and keyset.
-  (insert users-table id {
-      "keyset": keyset,
-      "nickname": nickname
-    })
+  (defun create-user:string (id:string nickname:string keyset:guard)
+    ;; Enforce access to restrict function calls to the operate-admin.
+    (enforce-guard "dev.operate-admin")
+    ;; Insert a row into the "users-table" with the given id, nickname,
+    ;; and keyset.
+    (insert users-table id {
+       "keyset": keyset,
+       "nickname": nickname
+     })
   )
 
   ;; Define the "enforce-user-auth" function that takes the id parameter.
@@ -56,14 +56,14 @@
     ;; keyset for the id.
     (with-read users-table id { "keyset":= k }
       ;; Enforce user authorization of data to the given keyset.
-      (enforce-keyset k)
+      (enforce-guard k)
       ;; Return the value of the keyset.
       k)
   )
   
   ;; Define a "change-nickname" function that takes the parameters 
   ;; id and new-name.
-  (defun change-nickname (id:string new-name:string)
+  (defun change-nickname:string (id:string new-name:string)
     ;; Enforce user authorization for the id provided.
     (enforce-user-auth id)
     ;; Update the nickname to the new-name for the given id.  
@@ -85,13 +85,11 @@
 
 ;; End module declaration for the "auth" module.
 )
- 
+;; ===================================================================
+;;  5 Create the table
+;; ===================================================================
+;; Create the users-table. 
 (create-table users-table)       
-;; ===================================================================
-;;  5-Create-table
-;; ===================================================================
-
-;; Create the payments-table.
 
 ;; ===================================================================
 ;;  6-Test the functions

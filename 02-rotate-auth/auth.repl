@@ -13,20 +13,20 @@
 (commit-tx)
 
 (begin-tx)
-(namespace 'free)
+(namespace "dev")
 (use auth)
 (env-data {"admin-keyset" : ["admin"],
            "sarah-keyset": ["sarah"],
            "james-keyset": ["james"]})
 ;; First we create wallet accounts
-(create-user "admin" "Administrator" (read-keyset 'admin-keyset))
-(create-user "Sarah" "Sarah" (read-keyset 'sarah-keyset))
-(create-user "James" "Jamess" (read-keyset 'james-keyset))
+(create-user "admin" "Administrator" (read-keyset "admin-keyset"))
+(create-user "Sarah" "Sarah" (read-keyset "sarah-keyset"))
+(create-user "James" "Jamess" (read-keyset "james-keyset"))
 
 (commit-tx)
 
 (begin-tx "Test Enforce User Authentication")
-(use free.auth)
+(use dev.auth)
 
 (expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (enforce-user-auth "Sarah"))
 
@@ -37,7 +37,7 @@
 (commit-tx)
 
 (begin-tx "Test Change Nickname")
-(use free.auth)
+(use dev.auth)
 (env-keys [""])
 (expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (change-nickname "Sarah" "Sarah"))
 
@@ -50,7 +50,7 @@
 (commit-tx)
 
 (begin-tx "Test Rotate Keyset")
-(use free.auth)
+(use dev.auth)
 (env-data {
            "sarah-keyset": ["sarah"],
            "james-keyset": ["james"]})
