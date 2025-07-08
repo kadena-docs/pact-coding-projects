@@ -10,33 +10,31 @@
 ;;  build the auth.pact final application.
 ;;
 ;; ===================================================================
-;;  1-Define-two-keysets
+;;  1 Define the namespace, two keysets, and module
 ;; ===================================================================
-;; Keysets must be defined in a namespace.
-;;
+;; 
+;; Define and enter a new namespace or enter an existing "free" 
+;; namespace.
+
 ;; Define and read a keyset named module-admin.
 
 ;; Define and read a keyset named operate-admin.
-
-;; ===================================================================
-;;  2-Start-module-declaration
-;; ===================================================================
 
 ;; Create a module named "auth" that is governed by the 
 ;; "module-admin" keyset guard.
 
 ;; ===================================================================
-;;  3-Define-schemas-and-table
+;;  2 Define the schema and table
 ;; ===================================================================
 
-  ;; Define the schema for "user" with columns for "nickname" as type 
+  ;; Define the "user" schema with columns for "nickname" as type 
   ;; string and "keyset" as type guard.
 
   ;; Define the "users-table" using the schema {user} you  
   ;; created.
 
 ;; ===================================================================
-;;  4-Define-functions
+;;  3 Define functions
 ;; ===================================================================
 
   ;; Define a "create-user" function that takes arguments id, nickname, 
@@ -75,13 +73,13 @@
       ;; Return the message "Updated keyset for user [id]"
   
 ;; ===================================================================
-;;  5-Create-table
+;;  4 Create the table
 ;; ===================================================================
 
-;; Create the payments-table.
+;; Create the users-table.
 
 ;; ===================================================================
-;;  6-Test the functions
+;;  5 Test the functions
 ;; ===================================================================
 
 ;; Create a test user (sarah) with a nickname and keyset.

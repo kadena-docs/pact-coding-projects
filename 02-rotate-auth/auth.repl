@@ -1,66 +1,81 @@
+;; Set environment data.
 (env-keys ["admin", "moduleadmin", "operateadmin"])
 (env-data
   { 
     "module-admin-keyset": ["moduleadmin"],
     "module-operate-keyset": ["operateadmin"]})
 
-;;init module is loaded
-(load "../init.repl")
+;; Load the "init" module.
+;;(load "../init.repl")
 
-;;auth module is loaded
+;; Load the "auth" module.
 (begin-tx)
-(load "auth.pact")
+  (load "auth.pact")
 (commit-tx)
 
+;; Import the "auth" module and set basic environment data.
 (begin-tx)
-(namespace 'free)
-(use auth)
-(env-data {"admin-keyset" : ["admin"],
-           "sarah-keyset": ["sarah"],
-           "james-keyset": ["james"]})
-;; First we create wallet accounts
-(create-user "admin" "Administrator" (read-keyset 'admin-keyset))
-(create-user "Sarah" "Sarah" (read-keyset 'sarah-keyset))
-(create-user "James" "Jamess" (read-keyset 'james-keyset))
+  (namespace "dev")
+  (use auth)
+  (env-data 
+    {
+      "admin-keyset" : ["admin"],
+      "sarah-keyset": ["sarah"],
+      "james-keyset": ["james"]
+    }
+  )
+
+  ;; Use the create-user function to create three accounts.
+  (create-user "admin" "Administrator" (read-keyset "admin-keyset"))
+  (create-user "Sarah" "Sarah" (read-keyset "sarah-keyset"))
+  (create-user "James" "Jamess" (read-keyset "james-keyset"))
 
 (commit-tx)
 
-(begin-tx "Test Enforce User Authentication")
-(use free.auth)
+;; Test an expected failure.
+(begin-tx "Test enforce user authentication")
+  (use dev.auth)
 
-(expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (enforce-user-auth "Sarah"))
+  (expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (enforce-user-auth "Sarah"))
 
-;; Now we specify the keyset and expect this to succeed
-(env-keys ["sarah"])
-(enforce-user-auth "Sarah")
-
-(commit-tx)
-
-(begin-tx "Test Change Nickname")
-(use free.auth)
-(env-keys [""])
-(expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (change-nickname "Sarah" "Sarah"))
-
-;; Now we specify the keyset and expect this to succeed
-(env-keys ["sarah", "james"])
-(change-nickname "Sarah" "Sarah")
-(change-nickname "James" "James")
-(env-keys [""])
+  ;; Specify the keyset and expect the operations to succeed.
+  (env-keys ["sarah"])
+  (enforce-user-auth "Sarah")
 
 (commit-tx)
 
-(begin-tx "Test Rotate Keyset")
-(use free.auth)
-(env-data {
-           "sarah-keyset": ["sarah"],
-           "james-keyset": ["james"]})
+;; Test an expected failure.
+(begin-tx "Test change nickname")
+  (use dev.auth)
+  (env-keys [""])
+  (expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (change-nickname "Sarah" "Sarah"))
 
-(expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (rotate-keyset "Sarah" (read-keyset 'sarah-keyset)))
-(expect-failure "Keyset not in scope" "Keyset failure (keys-all)" (rotate-keyset "James" (read-keyset 'james-keyset)))
+  ;; Specify the keyset and expect the operation to succeed.
+  (env-keys ["sarah", "james"])
+  (change-nickname "Sarah" "Sara")
+  (change-nickname "James" "Jim")
+  (env-keys [""])
 
-;; Now we specify the keyset and expect this to succeed
-(env-keys ["sarah", "james"])
-(rotate-keyset "Sarah" (read-keyset 'james-keyset))
-(rotate-keyset "James" (read-keyset 'sarah-keyset))
+(commit-tx)
+
+;; Test an expected failure.
+(begin-tx "Test rotate keyset")
+  (use dev.auth)
+  (env-data 
+    {
+      "sarah-keyset": ["sarah"],
+      "james-keyset": ["james"]
+    }
+  )
+
+  (expect-failure "Keyset not in scope" 
+    "Keyset failure (keys-all)" (rotate-keyset "Sarah" (read-keyset "sarah-keyset")))
+  (expect-failure "Keyset not in scope" 
+    "Keyset failure (keys-all)" (rotate-keyset "James" (read-keyset "james-keyset")))
+
+  ;; Specify the keyset and expect the operation to succeed.
+  (env-keys ["sarah", "james"])
+  (rotate-keyset "Sarah" (read-keyset 'james-keyset))
+  (rotate-keyset "James" (read-keyset 'sarah-keyset))
 
 (commit-tx)
