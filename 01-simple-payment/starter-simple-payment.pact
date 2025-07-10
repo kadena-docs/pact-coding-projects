@@ -1,5 +1,5 @@
 ;;
-;; "Simple payments" module
+;; "Simple payments" coding project
 ;; 
 ;; ===================================================================
 ;;

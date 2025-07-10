@@ -1,16 +1,16 @@
 ;;
-;; "Rotate authorized keys" coding project
+;; "Contract interaction" coding project
 ;; 
 ;; ===================================================================
 ;;
 ;;  This file provides the framework for the different tasks you'll
-;;  try to tackle in the "Rotate authorized keys" coding project.
+;;  try to tackle in the "Contract interaction" coding project.
 ;;
 ;;  This starter file provides a preview of the steps you'll follow to
-;;  build the auth.pact final application.
+;;  build the final application with two modules.
 ;;
 ;; ===================================================================
-;;  1 Define the namespace, two keysets, and module
+;;  1 Define the "auth" module in a namespace with two keysets
 ;; ===================================================================
 ;; 
 ;; Define and enter a new namespace or enter an existing "free" 
@@ -24,17 +24,17 @@
 ;; "module-admin" keyset guard.
 
 ;; ===================================================================
-;;  2 Define the schema and table
+;;  2 Define the "user" schema and "users" table
 ;; ===================================================================
 
   ;; Define the "user" schema with columns for "nickname" as type 
   ;; string and "keyset" as type guard.
 
-  ;; Define the "users-table" using the schema {user} you  
+  ;; Define the "users" table that uses the {user} schema you  
   ;; created.
 
 ;; ===================================================================
-;;  3 Define functions
+;;  3 Define authorization functions
 ;; ===================================================================
 
   ;; Define a "create-user" function that takes arguments id, nickname, 
@@ -53,37 +53,30 @@
       ;; Enforce user authorization of data to the given keyset.
 
       ;; Return the value of the keyset.
-
-  ;; Define a "change-nickname" function that takes the parameters 
-  ;; id and new-name.
-
-    ;; Enforce user authorization for the id provided.
-
-    ;; Update the nickname to the new-name for the given id.  
-
-    ;; Return the message "Updated name for user [id] to [name]"
-
-  ;; Define a "rotate-keyset" function that takes the parameters 
-  ;; id and new-keyset.
-
-      ;; Enforce user authorization for the id provided.
-
-      ;; Update the keyset to the new-keyset for the given id.
-
-      ;; Return the message "Updated keyset for user [id]"
   
 ;; ===================================================================
-;;  4 Create the table
+;;  4 Create the "users" table
 ;; ===================================================================
 
-;; Create the users-table.
+;; Create the "users" table.
+
+;; ===================================================================
+;;  5 Define the "payments" module in a namespace with one keyset
+;; ===================================================================
+
+;; Enter the same namespace as the "auth" module.
+;;
+;; Define and read a keyset named "module-admin".
+;;
+;; Import the "auth" module.
+;;
+;; Define the "account" schema and "accounts" table.
+;;
+;; Add functions that use the "auth" module to the "payments" module.
+;;
+;; Create the "accounts" table.
 
 ;; ===================================================================
 ;;  5 Test the functions
 ;; ===================================================================
 
-;; Create a test user (sarah) with a nickname and keyset.
-
-;; Change the nickname for the test user.
-
-;; Change the keyset for the test user.

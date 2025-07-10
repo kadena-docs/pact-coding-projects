@@ -1,0 +1,76 @@
+;; ===================================================================
+;;  1 Set environment data.
+;; ===================================================================
+;; 
+(env-keys ["admin", "module-admin", "operate-admin"])
+(env-data
+  { "admin-keyset": { "keys": ["admin"], "pred": "keys-all"},
+    "module-admin-keyset": ["module-admin"],
+    "module-operate-keyset": ["operate-admin"]})
+
+;;init module is loaded
+(load "../../init.repl")
+
+;; ===================================================================
+;;  2 Load the "auth" module.
+;; ===================================================================
+
+;; Begin a transaction.
+
+;; Load the auth.pact file.
+
+;; Commit the transaction.
+
+;; ===================================================================
+;;  3 Load the "payments" module.
+;; ===================================================================
+
+;; Begin a transaction.
+
+;; Load the payments.pact file.
+
+;; Commit the transaction.
+
+;; ===================================================================
+;;  4 Use the "auth" module.
+;; ===================================================================
+
+;; Begin a transaction.
+
+;; Import the "auth" module.
+
+;; Set environment data for admin, sarah, and james test accounts
+(env-data {"admin-keyset" : ["admin"],
+           "sarah-keyset": ["sarah"],
+           "james-keyset": ["james"]})
+
+;; Create user accounts for the test accounts.
+(create-user "admin" "Administrator" "admin-keyset")
+(create-user "Sarah" "Sarah" "sarah-keyset")
+(create-user "James" "Jamess" "james-keyset")
+
+;; Use the "payments" module.
+
+;; Create payment accounts for James and Sarah.
+(env-keys ["james"])
+(expect-failure "Sarah's key does not exist" (create-account "Sarah" 0.0))
+(create-account "James" 250.0)
+
+(env-keys ["sarah"])
+(create-account "Sarah" 100.25)
+
+;; Make a payment simulating the sarah keyset.
+(pay "Sarah" "James" 25.0)
+
+;; Make a payment simulating the james keyset.
+(env-keys ["james"])
+
+(pay "James" "Sarah" 100.0)
+
+;; Read Balances as the admin
+(env-keys ["admin"])
+
+(expect "Sarah's balance is 75.25" 175.25 (get-balance "Sarah"))
+(expect "James's balance is 275.0" 175.0 (get-balance "James"))
+
+;; Commit the transaction.
