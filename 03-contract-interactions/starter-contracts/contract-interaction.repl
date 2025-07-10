@@ -8,8 +8,8 @@
     "module-admin-keyset": ["module-admin"],
     "module-operate-keyset": ["operate-admin"]})
 
-;;init module is loaded
-(load "../../init.repl")
+;; Optionally, load initial environment from an init module.
+;; (load "../../init.repl")
 
 ;; ===================================================================
 ;;  2 Load the "auth" module.
@@ -67,7 +67,7 @@
 
 (pay "James" "Sarah" 100.0)
 
-;; Read Balances as the admin
+;; Read balances as the admin
 (env-keys ["admin"])
 
 (expect "Sarah's balance is 75.25" 175.25 (get-balance "Sarah"))

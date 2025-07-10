@@ -52,7 +52,7 @@
 
   ;; Define the "enforce-user-auth" function that takes the id parameter.
   (defun enforce-user-auth:guard (id:string)
-    ;; Read the users-table to find the id, then bind value k to the 
+    ;; Read the users table to find the id, then bind value k to the 
     ;; keyset for the id.
     (with-read users id { "keyset":= k }
       ;; Enforce user authorization of data to the given keyset.

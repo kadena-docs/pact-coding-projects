@@ -1,57 +1,58 @@
-;;
-;; Simple accounts model.
-;;
-;;---------------------------------
-;;
-;;  Create keysets named 'admin-keyset', 'sarah-keyset' and 'james-keyset' and
-;;  add some keys to them for loading this contract.
-;;
-;;  Make sure the message is signed with those added keys as well.
-;;
-;;---------------------------------
+;; ===================================================================
+;;  1 Define the namespace, keyset, and module
+;; ===================================================================
+;; 
+;; Define and enter a custom "dev" namespace.
+(define-namespace "dev" (read-keyset "module-admin-keyset") (read-keyset "module-admin-keyset"))
+(namespace "dev")
 
-(namespace 'free)
+;; Define and read a keyset named module-admin.
+(define-keyset "dev.module-admin" (read-keyset "module-admin-keyset"))
 
-;define keyset to guard module
-(define-keyset "free.admin-keyset" (read-keyset "admin-keyset"))
-
-;define smart-contract code
-(module payments "free.admin-keyset"
-
+;; Create the "payments" module that is governed by the "module-admin" keyset guard.
+(module payments ADMIN
+  (defcap ADMIN ()
+    (enforce-guard "dev.module-admin"))
+    
   (use auth)
 
-  (defschema accounts
+  ;; Define the "account" schema with one column for "balance" as type 
+  ;; decimal.
+  (defschema account
     balance:decimal)
+  
+  ;; Define the "accounts" table that uses the {account} schema. 
+  (deftable accounts:{account})
 
-  (deftable accounts-table:{accounts})
-
-  (defun create-account (userId initial-balance)
+;; Define the create-account function.
+  (defun create-account:string (userId:string initial-balance:decimal)
     "Create a new account for ID with INITIAL-BALANCE funds, must be administrator."
     (enforce-user-auth userId)
     (enforce (>= initial-balance 0.0) "Initial balances must be >= 0.")
-    (insert accounts-table userId
+    (insert accounts userId
             { "balance": initial-balance}))
 
-  (defun get-balance (userId)
+;; Define the get-balance function
+  (defun get-balance:decimal (userId:string)
     "Only admin can read balance."
-    (enforce-user-auth 'admin)
-    (with-read accounts-table userId
+    (enforce-user-auth "admin")
+    (with-read accounts userId
       { "balance":= balance }
       balance))
 
-  (defun pay (from to amount)
-    (with-read accounts-table from { "balance":= from-bal }
+;; Define the pay function.
+  (defun pay:string (from:string to:string amount:decimal)
+    (with-read accounts from { "balance":= from-bal }
       (enforce-user-auth from)
-      (with-read accounts-table to { "balance":= to-bal }
-        (enforce (> amount 0.0) "Negative Transaction Amount")
-        (enforce (>= from-bal amount) "Insufficient Funds")
-        (update accounts-table from
+      (with-read accounts to { "balance":= to-bal }
+        (enforce (> amount 0.0) "Transaction amount cannot be negative.")
+        (enforce (>= from-bal amount) "Insufficient funds")
+        (update accounts from
                 { "balance": (- from-bal amount) })
-        (update accounts-table to
+        (update accounts to
                 { "balance": (+ to-bal amount) })
         (format "{} paid {} {}" [from to amount]))))
-
 )
 
-;define table
-(create-table accounts-table)
+;; Create "accounts" table
+(create-table accounts)
