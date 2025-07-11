@@ -1,3 +1,7 @@
 .vscode
 coverage
-*pact-history   
+coverage/lcov.info
+*pact-history 
+.pact-history
+*/.pact-history
+*/.pc-history

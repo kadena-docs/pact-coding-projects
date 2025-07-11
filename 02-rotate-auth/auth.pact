@@ -83,7 +83,7 @@
     (format "Updated keyset for user {}" [id])
   )
 ;; End module declaration for the "auth" module.
-) 
+)
 ;; ===================================================================
 ;;  4 Create the table
 ;; ===================================================================

@@ -14,19 +14,30 @@
 ;; ===================================================================
 ;;  2 Load the "auth" module.
 ;; ===================================================================
-(begin-tx)
-  (load "auth.pact")
-(commit-tx)
+
+;; Begin a transaction.
+
+;; Load the auth.pact file.
+
+;; Commit the transaction.
+
 ;; ===================================================================
 ;;  3 Load the "payments" module.
 ;; ===================================================================
-(begin-tx)
-  (load "payments.pact")
-(commit-tx)
 
-(begin-tx)
+;; Begin a transaction.
 
-(use dev.auth)
+;; Load the payments.pact file.
+
+;; Commit the transaction.
+
+;; ===================================================================
+;;  4 Use the "auth" module.
+;; ===================================================================
+
+;; Begin a transaction.
+
+;; Import the "auth" module.
 
 ;; Set environment data for admin, sarah, and james test accounts
 (env-data {"admin-keyset" : ["admin"],
@@ -34,30 +45,32 @@
            "james-keyset": ["james"]})
 
 ;; Create user accounts for the test accounts.
-(create-user "admin" "Administrator" (read-keyset "admin-keyset"))
-(create-user "sarah" "Sarah" (read-keyset "sarah-keyset"))
-(create-user "james" "James" (read-keyset "james-keyset"))
+(create-user "admin" "Administrator" "admin-keyset")
+(create-user "Sarah" "Sarah" "sarah-keyset")
+(create-user "James" "Jamess" "james-keyset")
 
 ;; Use the "payments" module.
-(use dev.payments)
 
 ;; Create payment accounts for James and Sarah.
 (env-keys ["james"])
 (expect-failure "Sarah's key does not exist" (create-account "Sarah" 0.0))
-(create-account "james" 250.0)
+(create-account "James" 250.0)
 
 (env-keys ["sarah"])
-(create-account "sarah" 100.25)
-;; Make a payment simulating the "sarah" keyset guard and "sarah" userId.
-(pay "sarah" "james" 25.0)
+(create-account "Sarah" 100.25)
 
+;; Make a payment simulating the sarah keyset.
+(pay "Sarah" "James" 25.0)
+
+;; Make a payment simulating the james keyset.
 (env-keys ["james"])
-;; Make a payment simulating the "james" keyset guard and "james" userId.
-(pay "james" "sarah" 100.0)
 
-;; Read balances as the "admin" account.
+(pay "James" "Sarah" 100.0)
+
+;; Read balances as the admin
 (env-keys ["admin"])
-(expect "Sarah's balance is 75.25" 175.25 (get-balance "sarah"))
-(expect "James's balance is 275.0" 175.0 (get-balance "james"))
 
-(commit-tx)
+(expect "Sarah's balance is 75.25" 175.25 (get-balance "Sarah"))
+(expect "James's balance is 275.0" 175.0 (get-balance "James"))
+
+;; Commit the transaction.
