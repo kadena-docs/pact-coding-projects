@@ -45,7 +45,7 @@
     ;; Insert a row into the "users-table" with the given id, nickname,
     ;; and keyset.
     (insert users id {
-       "keyset": (read-keyset keyset),
+       "keyset": keyset,
        "nickname": nickname
      })
   )
