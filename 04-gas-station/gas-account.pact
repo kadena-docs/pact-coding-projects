@@ -1,7 +1,8 @@
 (namespace "free")
 
 (module test-gas GOVERNANCE
-   (defcap GOVERNANCE () true)
+   (defcap GOVERNANCE () 
+     (enforce-guard "free.dev-account"))
 
 
    (implements gas-payer-v1)
@@ -35,13 +36,13 @@
   (defun init ()
      (coin.create-account GAS_ACCOUNT (create-gas-payer-guard))
   )
-  (defun display ()
+  (defun display:object ()
      (coin.details free.test-gas.GAS_ACCOUNT)
   )
   
 )
 
-(if (read-msg 'init)
+(if (read-msg "init")
   [(init)]
   ["Not creating the gas station account"]
 )
