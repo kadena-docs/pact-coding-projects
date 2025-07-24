@@ -1,55 +1,54 @@
 ;; ========================================================
-;;                1-load-environment-data
+;; 1 Load environment data
 ;; ========================================================
 
-;; set transaction signature key to loansadmin
+;; Set transaction signature key to loansadmin
 
-;; set environment data to the loans-admin-keyset with keys loansadmin and predicate function of keys-all
-
-
-
-;; ========================================================
-;;                 2-load-pact-file
-;; ========================================================
-
-;; begin a transaction
-
-;; load loans.pact into the REPL
-
-;; commit the transaction
+;; Set environment data to the loans-admin-keyset with keys loansadmin and predicate function of keys-all
 
 
 ;; ========================================================
-;;                   3-call-functions
+;; 2 Load pact file
 ;; ========================================================
 
-;; begin a transaction
+;; Begin a transaction
 
-;; use the loans module
+;; Load loans.pact into the REPL
 
-;; call the create-a-loan function and specify an input for each parameter
-
-;; call the assign-a-loan function and specify an input for each parameter
-
-;; call the sell-a-loan function and specify an input for each parameter
-
-;; call the sell-a-loan function and specify an input for each parameter
-
-;; commit the transaction
+;; Commit the transaction
 
 
 ;; ========================================================
-;;                    4-read-loans
+;; 3 Call update functions
 ;; ========================================================
 
-;; begin a transaction
+;; Begin a transaction
 
-;; use the loans module
+;; Use the loans module
 
-;; read the loan inventory
+;; Call the create-a-loan function and specify an input for each parameter
 
-;; read loans with status of INITIATED
+;; Call the assign-a-loan function and specify an input for each parameter
 
-;; read loans with status of ASSIGNED
+;; Call the sell-a-loan function and specify an input for each parameter
 
-;; commit the transaction
+;; Call the sell-a-loan function and specify an input for each parameter
+
+;; Commit the transaction
+
+
+;; ========================================================
+;; 4 Call read loan functions
+;; ========================================================
+
+;; Begin a transaction
+
+;; Use the loans module
+
+;; Read the loan inventory
+
+;; Read loans with status of INITIATED
+
+;; Read loans with status of ASSIGNED
+
+;; Commit the transaction
