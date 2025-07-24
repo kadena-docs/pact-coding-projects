@@ -56,7 +56,7 @@
 ;; Function: inventory-key
 ;; ------------------------------------------------
 
-   (defun inventory-key (loanId:string owner:string)
+   (defun inventory-key:string (loanId:string owner:string)
      (format "{}:{}" [loanId owner])
    )
 
@@ -64,7 +64,7 @@
 ;; Function: create-a-loan
 ;; ------------------------------------------------
 
-   (defun create-a-loan (loanId:string loanName:string entityName:string loanAmount:integer)
+   (defun create-a-loan:string (loanId:string loanName:string entityName:string loanAmount:integer)
      (insert loans loanId {
        "loanName":loanName,
        "entityName":entityName,
@@ -82,7 +82,7 @@
 ;; Function: assign-a-loan
 ;; ------------------------------------------------
 
-   (defun assign-a-loan (txid:string loanId:string buyer:string amount:integer)
+   (defun assign-a-loan:string (txid:string loanId:string buyer:string amount:integer)
 
      (with-read loans loanId {
        "entityName":= entityName,
@@ -112,7 +112,7 @@
 ;; Function: sell-a-loan
 ;; ------------------------------------------------
 
-   (defun sell-a-loan (txid:string loanId:string buyer:string seller:string amount:integer)
+   (defun sell-a-loan:string (txid:string loanId:string buyer:string seller:string amount:integer)
      (with-read loan-inventory-table (inventory-key loanId seller)
        {"balance":= prev-seller-balance}
      (with-default-read loan-inventory-table (inventory-key loanId buyer)    
@@ -135,21 +135,21 @@
 ;; Function: read-a-loan
 ;; ------------------------------------------------
 
-    (defun read-a-loan (loanId:string)
+    (defun read-a-loan:object (loanId:string)
       (read loans loanId))
 
 ;; ------------------------------------------------
 ;; Function: read-all-loans
 ;; ------------------------------------------------
 
-   (defun read-all-loans ()
+   (defun read-all-loans:list ()
      (select loans (constantly true)))
 
 ;; ------------------------------------------------
 ;; Function: read-inventory-pair
 ;; ------------------------------------------------
 
-   (defun read-inventory-pair (key:string)
+   (defun read-inventory-pair:object (key:string)
      {"inventory-key":key,
       "balance": (at 'balance (read loan-inventory-table key))}
    )
@@ -158,14 +158,14 @@
 ;; Function: read-loan-inventory
 ;; ------------------------------------------------
 
-   (defun read-loan-inventory ()
+   (defun read-loan-inventory:list ()
      (map (read-inventory-pair) (keys loan-inventory-table)))
 
 ;; ------------------------------------------------
 ;; Function: read-loans-with-status
 ;; ------------------------------------------------
 
-   (defun read-loans-with-status (status:string)
+   (defun read-loans-with-status:list (status:string)
      (select loans (where "status" (= status)))
    )
 
