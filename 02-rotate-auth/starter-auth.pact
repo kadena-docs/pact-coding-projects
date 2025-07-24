@@ -1,5 +1,5 @@
 ;;
-;; "Rotate authorized keys" module
+;; "Rotate authorized keys" coding project
 ;; 
 ;; ===================================================================
 ;;
