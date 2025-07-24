@@ -1,9 +1,0 @@
-;; ========================================================
-;;                 2-load-pact-file
-;; ========================================================
-
-;; begin a transaction
-
-;; load loans.pact into the REPL
-
-;; commit the transaction
