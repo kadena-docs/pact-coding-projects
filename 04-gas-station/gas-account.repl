@@ -1,21 +1,18 @@
 (env-data
     { "dev-account":
-        { 'keys : [ "58705e8699678bd15bbda2cf40fa236694895db614aafc82cf1c06c014ca963c" ]
-        , 'pred : 'keys-all
+        { "keys" : [ "dev-account" ]
+        , "pred" : "keys-all"
         }
     }
 )
   (env-sigs
-    [{ 'key  : "58705e8699678bd15bbda2cf40fa236694895db614aafc82cf1c06c014ca963c"
-     , 'caps : []
+    [{ "key"  : "dev-account"
+     , "caps" : []
     }]
   )
 
-(begin-tx "Define principal namespace")
+(begin-tx "Define REPL namespace and keyset")
   (define-namespace "free" (read-keyset "dev-account" ) (read-keyset "dev-account" ))
-(commit-tx)
- 
-(begin-tx "Define admin-keyset")
   (namespace "free")
   (define-keyset "free.dev-account" (read-keyset "dev-account" ))
 (commit-tx)
@@ -30,11 +27,11 @@
 (commit-tx)
 
 (env-data
-    { 'init: true }
+    { "init": true }
 )
 
 (begin-tx "Load gas station module")
-   (load "01-gas-account.pact")
+   (load "gas-account.pact")
    [GAS_ACCOUNT]
 (commit-tx)
 

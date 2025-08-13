@@ -1,0 +1,16 @@
+codeFile: "{{path-to-pact-code}}"
+data:
+  pistolas-dev-account:
+    keys: ["{{public-key}}"]
+    pred: "keys-all"
+  init: true
+meta:
+  chainId: "{{chain-id}}"
+  sender: "{{{sender-account}}}"
+  gasLimit: 80300
+  gasPrice: 0.000001
+  ttl: 600
+signers:
+  - public: "{{public-key}}"
+    caps: []
+networkId: "{{network-id}}"
