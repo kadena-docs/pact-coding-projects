@@ -1,0 +1,68 @@
+(begin-tx)
+
+(env-data {"coin-admin-keyset": ["coin-admin"]})
+(env-keys ["coin-admin"])
+(load "final-control-flow.pact")
+
+(commit-tx)
+
+(begin-tx)
+(env-data {"bob-keyset": ["bob"], "kate-keyset": ["kate"]})
+(env-keys ["kate"])
+
+(use my-coin)
+
+;; Create account bob
+(create-account "bob" (read-keyset "bob-keyset"))
+
+;; Test credit-if and debit-if
+(credit-if "bob" (read-keyset "bob-keyset") 10.0)
+(account-balance "bob")
+(debit-if "bob" 1.0)
+(account-balance "bob")
+
+;; Test debit-if amount failure returns an error message
+(debit-if "bob" 10.0)
+(expect-failure "Balance is not sufficient for transfer" (debit-if "bob" 10.0))
+
+;; Test credit-if keyset failure returns an error message
+(credit-if "bob" (read-keyset "kate-keyset") 10.0)
+(expect-failure "Keysets do not match" (credit-if "bob" (read-keyset "kate-keyset") 10.0))
+
+;; Test refactored credit and debit
+(credit "kate" (read-keyset "kate-keyset") 10.0)
+(account-balance "kate")
+(debit "kate" 1.0)
+
+;; Test refactored debit amount failure
+(expect-failure "Balance is not sufficient for transfer" (debit "kate" 10.0))
+
+;; Test refactored credit keyset failure
+(expect-failure "Keysets do not match" (credit 'bob (read-keyset 'kate-keyset) 10.0))
+
+;; Test inserting a row
+(env-data  {"lisa-keyset": ["lisa"]})
+(credit "lisa" (read-keyset "lisa-keyset") 10.0)
+(account-balance "lisa")
+
+(commit-tx)
+
+;; Test point accumulator
+(begin-tx "Test points functions")
+  (use my-coin)
+  (create-user "kai")
+  (check-points "kai")
+  (check-condition "kai")
+  (play "kai")
+  (check-points "kai")
+  (check-condition "kai")
+
+  (unlock-access "kai" 0)
+  (play "kai")
+  (unlock-access "kai" 10)
+
+  (check-points "kai")
+  (check-condition "kai")
+  (unlock-access "kai" 0)
+
+(commit-tx)
