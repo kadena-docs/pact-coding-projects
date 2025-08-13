@@ -1,3 +1,7 @@
+;; ===================================================================
+;;  1 Define module and keyset
+;; ===================================================================
+;;
 ;; For this project, the "my-coin" module represents a simple ledger 
 ;; system with functions to create accounts, credit, debit, transfer,
 ;; and look up account balances.
